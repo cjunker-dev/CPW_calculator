@@ -70,6 +70,10 @@ namespace CostPerWear.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (clothingItem.Wears != 0)
+                {
+                    clothingItem.CostPerWear = CalculateCPW(clothingItem.Cost, clothingItem.Wears);
+                }
                 _context.Add(clothingItem);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -109,6 +113,10 @@ namespace CostPerWear.Controllers
             {
                 try
                 {
+                    if (clothingItem.Wears != 0)
+                    {
+                        clothingItem.CostPerWear = CalculateCPW(clothingItem.Cost, clothingItem.Wears);
+                    }
                     _context.Update(clothingItem);
                     await _context.SaveChangesAsync();
                 }
@@ -160,6 +168,12 @@ namespace CostPerWear.Controllers
         private bool ClothingItemExists(int id)
         {
             return _context.ClothingItem.Any(e => e.Id == id);
+        }
+
+        private double CalculateCPW(double Cost, int Wears)
+        {
+            double CostPerWear = Cost / Wears;
+            return CostPerWear;
         }
     }
 }
